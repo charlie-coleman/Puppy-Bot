@@ -1,5 +1,7 @@
 import random
 import warnings
+import time
+import math
 
 # praw causes some weird warnings that don't matter if you don't do this. Clears up the console
 with warnings.catch_warnings():
@@ -13,11 +15,11 @@ run = True
 max_post = 3
 
 # The text to trigger a command
-open_commands = ['!puppy', '!hotguys', '!bellathorne', '!food', '!cheese', '!help']
+open_commands = ['!puppy', '!hotguys', '!bellathorne', '!food', '!cheese', '!help', '!uptime']
 admin_commands = ['!disconnect', '!setmax']
 
 # The purpose of each command, used in !help. Must be the same length as the corresponding command array
-open_purpose = ['pups', 'people say their hot, idk', 'bella thorne', 'and food', 'cheese', 'this']
+open_purpose = ['pups', 'people say their hot, idk', 'bella thorne', 'and food', 'cheese', 'this', 'how long the bot has been running']
 admin_purpose = ['disconnect the bot', 'sets the max number of posts per message']
 
 # List of admin account ids
@@ -25,8 +27,9 @@ admins = ['7246623']
 
 # Setup the arrays of reddit posts to pull from
 consequences = False
-r = praw.Reddit(client_id='K_Vq8AygtCs4VQ', client_secret="r5OCC3nCwP-n1dMP75LLucoW6JQ", user_agent='Luscious-Bot')
+r = praw.Reddit(client_id='K_Vq8AygtCs4VQ', client_secret='r5OCC3nCwP-n1dMP75LLucoW6JQ', user_agent='Luscious-Bot')
 
+start_time = time.time()
 puppy_posts = []
 davefranco_posts = []
 bellathorne_posts = []
@@ -44,6 +47,7 @@ food_subs_amount = [200]
 cheese_subs_amount = [200]
 
 # ~~~~~~~~OPEN COMMANDS~~~~~~~~
+
 
 # update pool of images
 def update():
@@ -155,6 +159,21 @@ def help_output(*args):
         print('Second argument must be the bot')
 
 
+# return time running
+def uptime(*args):
+    global start_time
+    seconds = int(time.time() - start_time)
+    hours = math.floor(seconds/3600)
+    minutes = math.floor((seconds-hours*3600)/60)
+    seconds = seconds - hours*3600 - minutes*60
+    time_string = str(hours) + ' hours ' + str(minutes) + ' minutes and ' + str(seconds) + ' seconds'
+    output_string = 'The last time the bot was reset was ' + time_string + ' seconds ago.'
+    try:
+        args[1].post(output_string)
+    except AttributeError:
+        print('Second argument must be the bot')
+
+
 # ~~~~~~~~ADMIN COMMANDS~~~~~~~~
 
 # disconnect the bot
@@ -191,5 +210,5 @@ def set_max(*args):
 update()
 
 # Assigns a function to a command. Must be the same length as the corresponding '_commands' array
-open_functions = [puppy_output, davefranco_output, bellathorne_output, food_output, cheese_output, help_output]
+open_functions = [puppy_output, davefranco_output, bellathorne_output, food_output, cheese_output, help_output, uptime]
 admin_functions = [disconnect, set_max]

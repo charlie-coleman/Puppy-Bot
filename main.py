@@ -3,7 +3,7 @@ import time
 import commands
 
 max_posts = 5
-
+start_time = time.time()
 # define the start times and the group ids for common groups
 time_last_updated = time.time()
 time_last_sent = time.time()
@@ -16,7 +16,7 @@ amy_chat = '26981106'
 groups = groupy.Group.list()
 main_group = None
 for group in groups:
-    if group.group_id == amy_chat:
+    if group.group_id == testing_ground:
         main_group = group
 
 # choose the correct bot depending on which chat we are in
