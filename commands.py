@@ -167,7 +167,7 @@ def uptime(*args):
     minutes = math.floor((seconds-hours*3600)/60)
     seconds = seconds - hours*3600 - minutes*60
     time_string = str(hours) + ' hours ' + str(minutes) + ' minutes and ' + str(seconds) + ' seconds'
-    output_string = 'The last time the bot was reset was ' + time_string + ' seconds ago.'
+    output_string = 'The last time the bot was reset was ' + time_string + ' ago.'
     try:
         args[1].post(output_string)
     except AttributeError:
