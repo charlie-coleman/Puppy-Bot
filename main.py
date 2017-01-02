@@ -16,7 +16,7 @@ amy_chat = '26981106'
 groups = groupy.Group.list()
 main_group = None
 for group in groups:
-    if group.group_id == testing_ground:
+    if group.group_id == amy_chat:
         main_group = group
 
 # choose the correct bot depending on which chat we are in

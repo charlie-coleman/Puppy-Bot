@@ -1,7 +1,9 @@
 import random
 import warnings
 import time
+import os
 import math
+from groupy import attachments
 
 # praw causes some weird warnings that don't matter if you don't do this. Clears up the console
 with warnings.catch_warnings():
@@ -15,11 +17,11 @@ run = True
 max_post = 3
 
 # The text to trigger a command
-open_commands = ['!puppy', '!hotguys', '!bellathorne', '!food', '!cheese', '!help', '!uptime']
+open_commands = ['!amy', '!puppy', '!hotguys', '!bellathorne', '!food', '!cheese', '!help', '!uptime']
 admin_commands = ['!disconnect', '!setmax']
 
 # The purpose of each command, used in !help. Must be the same length as the corresponding command array
-open_purpose = ['pups', 'people say their hot, idk', 'bella thorne', 'and food', 'cheese', 'this', 'how long the bot has been running']
+open_purpose = ['amy', 'pups', 'people say their hot, idk', 'bella thorne', 'and food', 'cheese', 'this', 'how long the bot has been running']
 admin_purpose = ['disconnect the bot', 'sets the max number of posts per message']
 
 # List of admin account ids
@@ -30,6 +32,7 @@ consequences = False
 r = praw.Reddit(client_id='K_Vq8AygtCs4VQ', client_secret='r5OCC3nCwP-n1dMP75LLucoW6JQ', user_agent='Luscious-Bot')
 
 start_time = time.time()
+amy_image = ''
 puppy_posts = []
 davefranco_posts = []
 bellathorne_posts = []
@@ -56,11 +59,14 @@ def update():
     global bellathorne_posts
     global food_posts
     global cheese_posts
+    global amy_image
     puppy_posts = []
     davefranco_posts = []
     bellathorne_posts = []
     food_posts = []
     cheese_posts = []
+    path = os.path.join(os.getcwd(), 'amy.jpg')
+    amy_image = attachments.Image.file(open(path, 'rb'))
     for i in range(len(puppy_subs)):
         if puppy_subs[i]:
             for post in r.subreddit(puppy_subs[i]).hot(limit=puppy_subs_amount[i]):
@@ -86,6 +92,14 @@ def update():
             for post in r.subreddit(cheese_subs[i]).hot(limit=cheese_subs_amount[i]):
                 if 'imgur' in post.url:
                     cheese_posts.append(post)
+
+
+def amy_output(*args):
+    global amy_image
+    try:
+        args[1].post(amy_image.url)
+    except AttributeError:
+        print('Second argument must be the bot')
 
 
 # generate and post the output for !boobs
@@ -210,5 +224,5 @@ def set_max(*args):
 update()
 
 # Assigns a function to a command. Must be the same length as the corresponding '_commands' array
-open_functions = [puppy_output, davefranco_output, bellathorne_output, food_output, cheese_output, help_output, uptime]
+open_functions = [amy_output, puppy_output, davefranco_output, bellathorne_output, food_output, cheese_output, help_output, uptime]
 admin_functions = [disconnect, set_max]
